@@ -48,12 +48,8 @@ if ingredients_list:
     time_to_insert = st.button("Submit Order")
     if time_to_insert:
         insert_stmt = f"""
-            INSERT INTO smoothies.public.orders(name_on_order, ingredients, order_filled)
-            VALUES (
-                '{name_on_order.replace("'", "''")}', 
-                '{ingredients_string.strip().replace("'", "''")}', 
-                {'TRUE' if is_filled else 'FALSE'}
-            )
+            INSERT INTO smoothies.public.orders("NAME_ON_ORDER", "INGREDIENTS", "ORDER_FILLED")
+            VALUES ('{name_on_order.replace("'", "''")}', '{ingredients_string.strip().replace("'", "''")}', {'TRUE' if is_filled else 'FALSE'})
         """
 
         st.write("Running SQL:", insert_stmt)

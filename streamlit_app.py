@@ -16,8 +16,11 @@ cnx = st.connection("snowflake")
 session = cnx.session()
 
 # Get fruit list from Snowflake
-my_dataframe = session.table("smoothies.public.fruit_options").select(col("FRUIT_NAME")).to_pandas()
-fruit_names = my_dataframe["FRUIT_NAME"].tolist()
+# Get fruit name and search term
+my_dataframe = session.table("smoothies.public.fruit_options").select(col("FRUIT_NAME"), col("SEARCH_ON"))
+pd_df = my_dataframe.to_pandas()
+fruit_names = pd_df["FRUIT_NAME"].tolist()
+
 
 # Multiselect input
 ingredients_list = st.multiselect("Choose up to 5 ingredients:", fruit_names, max_selections=5)
@@ -32,7 +35,9 @@ if ingredients_list:
         st.subheader(fruit_chosen + ' Nutrition Information')
 
         # Call SmoothieFroot API using fruit name
-        smoothiefroot_response = requests.get(f"https://my.smoothiefroot.com/api/fruit/{fruit_chosen.lower()}")
+        # Lookup SEARCH_ON value from pd_df
+        search_on = pd_df.loc[pd_df['FRUIT_NAME'] == fruit_chosen, 'SEARCH_ON'].iloc[0]
+        smoothiefroot_response = requests.get(f"https://my.smoothiefroot.com/api/fruit/{search_on}")
 
         # If found, display in dataframe. If not, show fallback message
         if smoothiefroot_response.status_code == 200:

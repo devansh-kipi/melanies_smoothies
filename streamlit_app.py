@@ -46,3 +46,22 @@ if ingredients_list:
     if time_to_insert:
         session.sql(my_insert_stmt).collect()
         st.success("Your Smoothie is ordered!", icon="✅")
+
+
+import requests
+import pandas as pd
+
+# Call the SmoothieFroot API
+smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
+
+# Show raw response (optional)
+st.text(f"API Response Code: {smoothiefroot_response.status_code}")
+
+# Parse JSON and show as dataframe
+if smoothiefroot_response.status_code == 200:
+    data = smoothiefroot_response.json()
+    sf_df = pd.json_normalize(data)
+    st.dataframe(sf_df)
+else:
+    st.error("Failed to fetch fruit data.")
+

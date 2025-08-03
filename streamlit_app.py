@@ -51,5 +51,7 @@ if ingredients_list:
             INSERT INTO smoothies.public.orders(name_on_order, ingredients, order_filled)
             VALUES ('{name_on_order}', '{ingredients_string.strip()}', {is_filled})
         """
+        st.write("Running SQL:", insert_stmt)
         session.sql(insert_stmt).collect()
+
         st.success("Your Smoothie is ordered!", icon="✅")

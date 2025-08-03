@@ -49,8 +49,9 @@ if ingredients_list:
     if time_to_insert:
         insert_stmt = f"""
             INSERT INTO smoothies.public.orders(name_on_order, ingredients, filled)
-            VALUES ('{name_on_order}', '{ingredients_string.strip()}', {is_filled})
+            VALUES ('{name_on_order}', '{ingredients_string.strip()}', {'TRUE' if is_filled else 'FALSE'})
         """
+
         st.write("Running SQL:", insert_stmt)
         session.sql(insert_stmt).collect()
 

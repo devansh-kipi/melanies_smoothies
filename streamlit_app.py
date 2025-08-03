@@ -23,15 +23,20 @@ ingredients_list = st.multiselect("Choose up to 5 ingredients:", fruit_names, ma
 # Display nutrition info if fruits are selected
 if ingredients_list:
     ingredients_string = ''
-    all_nutrition_data = []
 
     for fruit_chosen in ingredients_list:
         ingredients_string += fruit_chosen + ' '
 
-        # API call to SmoothieFroot
+        st.subheader(fruit_chosen + ' Nutrition Information')
+
+        # Call SmoothieFroot API using fruit name
         smoothiefroot_response = requests.get(f"https://my.smoothiefroot.com/api/fruit/{fruit_chosen.lower()}")
+
+        # If found, display in dataframe. If not, show fallback message
         if smoothiefroot_response.status_code == 200:
-            all_nutrition_data.append(smoothiefroot_response.json())
+            sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
+        else:
+            st.error(f"Sorry, {fruit_chosen} is not in our database.")
 
     # Display nutrition info in a DataFrame
     if all_nutrition_data:
